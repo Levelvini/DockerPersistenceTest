@@ -3,28 +3,21 @@ package com.levelVini.DockerPersistenceTest.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
-public class User {
+public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private LocalDate date;
 
-    @JoinColumn
-    private String name;
-
-    @JoinColumn
-    private String email;
-
-    @OneToMany(mappedBy = "client")
-    @JoinColumn(name = "order_id")
-    private List<Order> orders;
-
+    @ManyToOne
+    private User client;
 }

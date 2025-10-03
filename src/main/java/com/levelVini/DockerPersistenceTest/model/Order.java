@@ -1,22 +1,24 @@
 package com.levelVini.DockerPersistenceTest.model;
 
+import com.levelVini.DockerPersistenceTest.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate date;
+    private String description;
+    private LocalDateTime date;
+    @Enumerated(value = EnumType.STRING)
+    private OrderStatus status;
 
     @ManyToOne
     private User client;

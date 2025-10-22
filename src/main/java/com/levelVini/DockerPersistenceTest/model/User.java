@@ -23,7 +23,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
+//    @JoinColumn(name = "order_id")
     private List<Order> orders;
 
 }

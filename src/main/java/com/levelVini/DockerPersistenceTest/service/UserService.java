@@ -8,6 +8,7 @@ import com.levelVini.DockerPersistenceTest.model.User;
 import com.levelVini.DockerPersistenceTest.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -24,13 +25,15 @@ public class UserService {
         this.mapper = mapper;
     }
 
+
+    //Test using ModelMapper to parse all entities into a list
     @Transactional
     public List<UserResponse> getAllUsers(){
-        List<UserResponse> users = Collections.singletonList(mapper.map(repository.findAll(), UserResponse.class));
+        List<User> users = repository.findAll();
         if (users.isEmpty()){
             throw new EmptyListException("theres no user inserted!");
         }
-        return users;
+        return mapper.map(users, new TypeToken<List<UserResponse>>(){}.getType());
     }
 
     @Transactional

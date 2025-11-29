@@ -1,7 +1,7 @@
 package com.levelVini.DockerPersistenceTest.service;
 
 import com.levelVini.DockerPersistenceTest.exceptions.EmptyListException;
-import com.levelVini.DockerPersistenceTest.exceptions.ResourseNotFound;
+import com.levelVini.DockerPersistenceTest.exceptions.ResourseNotFoundException;
 import com.levelVini.DockerPersistenceTest.model.DTOs.UserRequest;
 import com.levelVini.DockerPersistenceTest.model.DTOs.UserResponse;
 import com.levelVini.DockerPersistenceTest.model.User;
@@ -11,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ public class UserService {
 
     @Transactional
     public Optional<UserResponse> getById(Long id){
-    return Optional.ofNullable(mapper.map(repository.findById(id).orElseThrow(()-> new ResourseNotFound("user not found!")),UserResponse.class));
+    return Optional.ofNullable(mapper.map(repository.findById(id).orElseThrow(()-> new ResourseNotFoundException("user not found!")),UserResponse.class));
     }
 
     @Transactional
@@ -49,14 +48,14 @@ public class UserService {
 
     @Transactional
     public String update(Long id, UserRequest user){
-        User userUpdate = repository.findById(id).orElseThrow(()-> new ResourseNotFound("entity not founded"));
+        User userUpdate = repository.findById(id).orElseThrow(()-> new ResourseNotFoundException("entity not founded"));
         User userReturn = repository.save(userUpdate = mapper.map(user,User.class));
         return userReturn.getName() + " has been updated!";
     }
 
     @Transactional
     public String delete(Long id){
-        repository.delete(repository.findById(id).orElseThrow(()-> new ResourseNotFound("user not exist")));
+        repository.delete(repository.findById(id).orElseThrow(()-> new ResourseNotFoundException("user not exist")));
         return "user has been deleted";
     }
 }

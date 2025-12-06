@@ -13,11 +13,10 @@ public class ErrorResponse {
     private LocalDateTime timestamp;
     private String message;
 
-    private String status;
 
-    public ErrorResponse(LocalDateTime timestamp, String message, String status) {
+    public ErrorResponse(LocalDateTime timestamp, String message) {
         this.timestamp = timestamp;
         this.message = message;
-        this.status = status;
+
     }
 }

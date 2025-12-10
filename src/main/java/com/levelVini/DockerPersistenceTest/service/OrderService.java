@@ -1,7 +1,7 @@
 package com.levelVini.DockerPersistenceTest.service;
 
 import com.levelVini.DockerPersistenceTest.exceptions.EmptyListException;
-import com.levelVini.DockerPersistenceTest.exceptions.ResourseNotFound;
+import com.levelVini.DockerPersistenceTest.exceptions.ResourseNotFoundException;
 import com.levelVini.DockerPersistenceTest.model.DTOs.OrderRequest;
 import com.levelVini.DockerPersistenceTest.model.DTOs.OrderResponse;
 import com.levelVini.DockerPersistenceTest.model.Order;
@@ -10,7 +10,6 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,27 +25,31 @@ public class OrderService {
 
     @Transactional
     public List<OrderResponse> getAllOrders(){
-        List<OrderResponse> orders = Collections.singletonList(mapper.map(repository.findAll(), OrderResponse.class));
+        List<Order> orders = repository.findAll();
         if (orders.isEmpty()){throw new EmptyListException("no orders finded");
         }
-        return orders;
+        return orders.stream().map(order-> mapper.map(order,OrderResponse.class)).toList();
     }
 
     @Transactional
     public Optional<OrderResponse> getById(Long id){
-        return Optional.ofNullable(mapper.map(repository.findById(id).orElseThrow(() -> new ResourseNotFound("Order not founded")), OrderResponse.class));
+        return Optional.ofNullable(mapper.map(repository.findById(id).orElseThrow(() -> new ResourseNotFoundException("Order not founded")), OrderResponse.class));
+    }
+
+    @Transactional
+    public void save(OrderRequest orderRequest){
+        repository.save(mapper.map(orderRequest,Order.class));
     }
 
     @Transactional
     public String update(Long id, OrderRequest orderRequest){
-        Order order = repository.findById(id).orElseThrow(()-> new ResourseNotFound("order not founded"));
+        Order order = repository.findById(id).orElseThrow(()-> new ResourseNotFoundException("order not founded"));
         Order orderUpdated = repository.save(order = mapper.map(orderRequest,Order.class));
         return "order " + orderUpdated.getId() + " has been updated";
     }
 
     @Transactional
-    public String delete(Long id){
-        repository.delete(repository.findById(id).orElseThrow(()-> new ResourseNotFound("the order has not founded")));
-        return "the order has been deleted";
+    public void delete(Long id){
+        repository.delete(repository.findById(id).orElseThrow(()-> new ResourseNotFoundException("the order has not founded")));
     }
 }

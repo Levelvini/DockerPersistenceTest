@@ -3,6 +3,8 @@ package com.levelVini.DockerPersistenceTest.model;
 import com.levelVini.DockerPersistenceTest.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,6 +19,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
+    @CreationTimestamp
     private LocalDateTime date;
     @Enumerated(value = EnumType.STRING)
     private OrderStatus status;

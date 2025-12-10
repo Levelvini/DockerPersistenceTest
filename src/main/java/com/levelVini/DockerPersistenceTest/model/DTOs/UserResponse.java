@@ -1,31 +1,32 @@
 package com.levelVini.DockerPersistenceTest.model.DTOs;
 
-import com.levelVini.DockerPersistenceTest.model.Order;
 import com.levelVini.DockerPersistenceTest.model.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserResponse {
     Long id;
     String name;
     String email;
-    List<Long> ordersId;
 
-    public UserResponse(Long id, String name, String email, List<Long> ordersId) {
+
+    public UserResponse(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.ordersId = ordersId;
     }
 
     public static UserResponse toUserResponse(User user){
         UserResponse userResponse = new UserResponse(
                 user.getId(),
                 user.getName(),
-                user.getEmail(),
-                user.getOrders().stream().map(Order::getId).collect(Collectors.toList())
+                user.getEmail()
         );
         return userResponse;
     }
 }
+// não consegui retornar uma lista de IDs com as orders vinculadas a usuarios especificos, aparentemente isso é feito com o @Query do JPA, em breve dou um jeito nisso!!

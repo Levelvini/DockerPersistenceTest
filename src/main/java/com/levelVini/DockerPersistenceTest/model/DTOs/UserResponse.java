@@ -19,7 +19,7 @@ public class UserResponse {
         this.ordersId = ordersId;
     }
 
-    public UserResponse toUserResponse(User user){
+    public static UserResponse toUserResponse(User user){
         UserResponse userResponse = new UserResponse(
                 user.getId(),
                 user.getName(),

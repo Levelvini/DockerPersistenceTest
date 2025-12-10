@@ -28,16 +28,16 @@ public class UserService {
     //Test using ModelMapper to parse all entities into a list
     @Transactional
     public List<UserResponse> getAllUsers(){
-        List<User> users = repository.findAll();
+        List<UserResponse> users = repository.findAll().stream().map(UserResponse::toUserResponse).toList();
         if (users.isEmpty()){
             throw new EmptyListException("theres no user inserted!");
         }
-        return mapper.map(users, new TypeToken<List<UserResponse>>(){}.getType());
+        return users;
     }
 
     @Transactional
     public Optional<UserResponse> getById(Long id){
-    return Optional.ofNullable(mapper.map(repository.findById(id).orElseThrow(()-> new ResourseNotFoundException("user not found!")),UserResponse.class));
+    return Optional.of(UserResponse.toUserResponse(repository.findById(id).orElseThrow(()-> new ResourseNotFoundException("User not founded!"))));
     }
 
     @Transactional
